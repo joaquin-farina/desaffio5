@@ -1,0 +1,50 @@
+<div>
+  <div class="addProduct">
+    <h1>Agregar producto:</h1>
+    <form>
+      <label for="title">Producto</label>
+      <input type="text" name="title" id="title" />
+      <label for="description">Descripcion</label>
+      <input type="text" name="description" id="description" />
+      <label for="price">Precio</label>
+      <input type="number" name="price" id="price" />
+      <label for="thumbnail">Thumbnail</label>
+      <input type="text" name="thumbnail" id="thumbnail" />
+      <label for="code">Codigo</label>
+      <input type="text" name="code" id="code" />
+      <label for="category">Categoria</label>
+      <input type="text" name="category" id="category" />
+      <label for="stock">Stock</label>
+      <input type="number" name="stock" id="stock" />
+      <button type="button" onclick="addProduct()">Agregar Producto</button>
+    </form>
+  </div>
+
+  <div id="productList">
+    <h1>Lista de productos:</h1>
+    {{#each payload}}
+    <div id="{{_id}}">
+      <h4>{{code}}: {{title}}</h4>
+      <p>ID de producto: {{_id}}</p>
+      <p>{{description}} - ${{price}} - Stock: {{stock}}</p>
+      <button type="button" onclick="addToCart('{{_id}}')">Agregar al carrito</button>
+      <button type="button"
+        onclick="updateProductId('{{_id}}','{{code}}','{{title}}','{{description}}','{{price}}','{{thumbnail}}','{{stock}}','{{category}}')">Actualizar
+        producto</button>
+      <button type="button" onclick="deleteProduct('{{_id}}')">Eliminar producto</button>
+    </div>
+    {{/each}}
+    {{#if hasPrevPage}}
+    <a href={{prevLink}}>Anterior</a>
+    {{/if}}
+    <label id="page">{{page}}</label>
+    {{#if hasNextPage}}
+    <a href={{nextLink}}>Siguiente</a>
+    {{/if}}
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.2/dist/sweetalert2.all.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>
