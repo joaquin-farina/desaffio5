@@ -10,6 +10,9 @@ import ProductManagerMongo from "./daos/MongoDB/productManager.js";
 import messageModel from "./daos/models/message.models.js";
 import CartManagerMongo from "./daos/MongoDB/cartManager.js";
 import cookieParser from "cookie-parser";
+import session from 'express-session'
+import FileStore from 'session-file-store'
+import MongoStore from 'connect-mongo'
 
 const app = express();
 const PORT = 8080;
@@ -19,42 +22,38 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger("dev"));
-
 app.use(cookieParser("palabrasecreta"));
+
+ const fileStore = FileStore(session)
+ app.use(session({
+   store: new fileStore({
+     path: './sessions',
+     ttl: 100,
+     retries: 0
+  }),
+   secret: 'palabraSecreta',
+  resave: true,
+   saveUninitialized: true
+ }))
+
+
+app.use(session({
+  store: MongoStore.create({
+    mongoUrl: "mongodb+srv://joaquin:mingui2024@coderhouse.uruhgmj.mongodb.net/ecommerce?retryWrites=true&w=majority",
+    mongoOptions: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    },
+    ttl: 15
+  }),
+  secret: 'palabraSecreta',
+  resave: true,
+  saveUninitialized: true
+}))
 
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
-
-app.get("/setCookie", (req, res) => {
-  res
-    .cookie("CoderC", "Esto es un cookie", { maxAge: 100000 })
-    .send("Seteando cookie");
-});
-
-app.get("/getCookie", (req, res) => {
-  console.log(req.cookies);
-  res.send(req.cookies);
-});
-
-app.get("/setCookieSigned", (req, res) => {
-  res
-    .cookie("CoderC", "Esto es un cookie firmada", {
-      maxAge: 100000,
-      signed: true,
-    })
-    .send("Seteando cookie");
-});
-
-app.get("/getCookieSigned", (req, res) => {
-  console.log(req.cookies);
-  console.log(req.signedCookies);
-  res.send(req.cookies);
-});
-
-app.get("/deleteCookie", (req, res) => {
-  res.clearCookie("CoderC").send("Cookie borrado.");
-});
 
 app.use(appRouter);
 
@@ -156,4 +155,5 @@ io.on("connection", (socket) => {
   });
 });
 
-//44
+
+

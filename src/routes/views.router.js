@@ -5,6 +5,12 @@ const router = Router();
 const managerMongo = new ProductManagerMongo();
 
 router
+  .get('/login', (req, res) => {
+    res.render('login')
+  })
+  .get('/register', (req, res) => {
+    res.render('register')
+  })
   .get("/", async (req, res) => {
     try {
       const { limit, pageQuery, query, sort } = req.query;
