@@ -11,8 +11,10 @@ import messageModel from "./daos/models/message.models.js";
 import CartManagerMongo from "./daos/MongoDB/cartManager.js";
 import cookieParser from "cookie-parser";
 import session from 'express-session'
-import FileStore from 'session-file-store'
 import MongoStore from 'connect-mongo'
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
+
 
 const app = express();
 const PORT = 8080;
@@ -24,19 +26,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(logger("dev"));
 app.use(cookieParser("palabrasecreta"));
 
- const fileStore = FileStore(session)
- app.use(session({
-   store: new fileStore({
-     path: './sessions',
-     ttl: 100,
-     retries: 0
-  }),
-   secret: 'palabraSecreta',
-  resave: true,
-   saveUninitialized: true
- }))
-
-
 app.use(session({
   store: MongoStore.create({
     mongoUrl: "mongodb+srv://joaquin:mingui2024@coderhouse.uruhgmj.mongodb.net/ecommerce?retryWrites=true&w=majority",
@@ -44,12 +33,15 @@ app.use(session({
       useNewUrlParser: true,
       useUnifiedTopology: true
     },
-    ttl: 15
+    ttl: 60 * 60 * 1000 * 24
   }),
   secret: 'palabraSecreta',
   resave: true,
   saveUninitialized: true
 }))
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
