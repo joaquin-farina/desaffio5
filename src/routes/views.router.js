@@ -11,6 +11,9 @@ router
   .get('/register', (req, res) => {
     res.render('register')
   })
+  .get('/current', async (req, res) => {
+    res.send({message: 'Validacion datos sensibles ViewsRouter'})
+  })
   .get("/", async (req, res) => {
     try {
       const { limit, pageQuery, query, sort } = req.query;

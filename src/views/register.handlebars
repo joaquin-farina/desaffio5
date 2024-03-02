@@ -1,13 +1,11 @@
-<form action="/api/sessions/register" method="post">
-    <label for="firstname">Nombre</label>
-    <input type="text" name="firstname" placeholder="Ingrese su nombre">
-    <label for="lastname">Apellido</label>
-    <input type="text" name="lastname" placeholder="Ingrese su apellido">
-    <label for="email">Email</label>
-    <input type="text" name="email" placeholder="Ingrese su email">
-    <label for="age">Edad</label>
-    <input type="text" name="age" placeholder="Ingrese su edad">
-    <label for="password">Password</label>
-    <input type="text" name="password" placeholder="Ingrese su password">
-    <button>Enviar</button>
-</form>
+<div class="register-card">
+    <h2>Register</h2>
+    <form action="/api/sessions/register" method="post" class="register-form">
+        <input type="text" name="firstname" placeholder="Ingrese su nombre">
+        <input type="text" name="lastname" placeholder="Ingrese su apellido">
+        <input type="text" name="email" placeholder="Ingrese su email" required>
+        <input type="text" name="age" placeholder="Ingrese su edad">
+        <input type="password" name="password" placeholder="Ingrese su password" required>
+        <button>Enviar</button>
+    </form>
+</div>

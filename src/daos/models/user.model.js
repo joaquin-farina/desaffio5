@@ -14,6 +14,7 @@ const usersSchema = new Schema({
     type: String,
   },
   age: Number,
+  cartId: String,
   role: {
     type: String,
     enum: ['user', 'admin'],

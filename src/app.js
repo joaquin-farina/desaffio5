@@ -18,38 +18,38 @@ import initializePassport from "./config/passport.config.js";
 
 const app = express();
 const PORT = 8080;
-
 connectDB();
 
+app.get('/favicon.ico', (req, res) => res.status(204));
+
+app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger("dev"));
-app.use(cookieParser("palabrasecreta"));
+app.use(cookieParser());
 
-app.use(session({
-  store: MongoStore.create({
-    mongoUrl: "mongodb+srv://joaquin:mingui2024@coderhouse.uruhgmj.mongodb.net/ecommerce?retryWrites=true&w=majority",
-    mongoOptions: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
+ app.use(session({
+   store: MongoStore.create({
+     mongoUrl: "mongodb+srv://joaquin:mingui2024@coderhouse.uruhgmj.mongodb.net/ecommerce?retryWrites=true&w=majority",
+     mongoOptions: {
+       useNewUrlParser: true,
+       useUnifiedTopology: true
     },
     ttl: 60 * 60 * 1000 * 24
   }),
-  secret: 'palabraSecreta',
-  resave: true,
-  saveUninitialized: true
-}))
+   secret: 'palabraSecreta',
+   resave: true,
+   saveUninitialized: true
+ }))
 initializePassport()
 app.use(passport.initialize())
-app.use(passport.session())
+ app.use(passport.session())
 
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
 app.use(appRouter);
-
-app.use(express.static(__dirname + "/public"));
 
 const httpServer = app.listen(PORT, (err) => {
   if (err) console.log(err);
@@ -146,6 +146,4 @@ io.on("connection", (socket) => {
     io.emit("messageLogs", message);
   });
 });
-
-
 
