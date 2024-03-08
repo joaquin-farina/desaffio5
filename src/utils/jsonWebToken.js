@@ -1,7 +1,9 @@
 import jwt from 'jsonwebtoken'
+import { configObject } from '../config/connectDB.js'
 
-export const private_key = 'palabrasecretaparatoken'
-const generateToken = (user) => jwt.sign(user, private_key, { expiresIn: '24h' })
+const { jwt_secret_Key } = configObject
+
+export const generateToken = (user) => jwt.sign(user, jwt_secret_Key, { expiresIn: '24h' })
 
 export const authToken = (req, res, next) => {
     const authHeader = req.headers['authorization']
@@ -10,12 +12,10 @@ export const authToken = (req, res, next) => {
 
     const token = authHeader.split(' ')[1]
 
-    jwt.verify(token, private_key, (error, decodeUser) => {
+    jwt.verify(token, jwt_secret_Key, (error, decodeUser) => {
         if (error) return res.status(401).send({ status: 'error', message: 'No authorizated.' })
 
         req.user = decodeUser
         next()
     })
 }
-
-export default generateToken

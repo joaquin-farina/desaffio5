@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 
+
 const usersCollection = "users";
 
 const usersSchema = new Schema({
@@ -25,6 +26,8 @@ const usersSchema = new Schema({
     default: true,
   },
 });
+
+
 
 const usersModel = model(usersCollection, usersSchema);
 

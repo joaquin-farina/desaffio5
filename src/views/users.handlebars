@@ -1,0 +1,14 @@
+<div>
+    <div id="users">
+        <h1>Lista de productos:</h1>
+        {{#each users}}
+
+        <label>email {{email}}</label>
+        {{/each}}
+    </div>
+        <label id="page">{{page}}</label>
+</div>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>

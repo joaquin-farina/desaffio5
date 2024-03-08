@@ -1,5 +1,8 @@
 import { Router } from 'express'
 import jwt from 'jsonwebtoken'
+import { configObject } from '../config/connectDB.js'
+
+const jwt_secret_Key = configObject.jwt_secret_Key
 
 class RouterClass {
     constructor() {
@@ -33,7 +36,7 @@ class RouterClass {
         if (policies[0] === 'public') next()
         const authHeaders = req.headers.authorization
         const token = authHeaders.split(' ')[1]
-        let user = jwt.verify(token, 'palabrasecretaparatoken')
+        let user = jwt.verify(token, jwt_secret_Key)
         if (!policies.includes(user.role.toUpperCase())) res.status(403).send({ status: 'Error', error: 'Not permissions' })
         req.user = user
         next()
@@ -42,9 +45,6 @@ class RouterClass {
     get(path, policies, ...callbacks) {
         this.router.get(path, this.handlePolicies, this.generateCustomResponses, this.applyCallback(callbacks))
     }
-    post() { }
-    put() { }
-    delete() { }
 }
 
 export default RouterClass

@@ -1,30 +1,29 @@
-import { Schema, model } from "mongoose";
+import usersModel from "../models/user.model.js";
 
-const usersCollection = "users";
+class UserManagerMongo {
+    constructor() {
+        this.usersModel = usersModel
+    }
 
-const usersSchema = new Schema({
-  firstname: String,
-  lastname: String,
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  password: {
-    type: String,
-  },
-  age: Number,
-  role: {
-    type: String,
-    enum: ['user', 'admin'],
-    default: 'user'
-  },
-  isActive: {
-    type: Boolean,
-    default: true,
-  },
-});
+    get = () => {
+        return this.usersModel.find({})
+    }
 
-const usersModel = model(usersCollection, usersSchema);
+    getBy = (filter) => {
+        return this.usersModel.findOne(filter)
+    }
 
-export default usersModel;
+    create = (newUser) => {
+        return this.usersModel.create(newUser)
+    }
+
+    update = (uid, userToUpdate) => {
+        return this.usersModel.findByIdAndUpdate({ _id: uid }, userToUpdate, { new: true })
+    }
+
+    delete = (uid) => {
+        return this.usersModel.findByIdAndUpdate({ _id: uid }, { isActive: false })
+    }
+}
+
+export default UserManagerMongo

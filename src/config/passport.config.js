@@ -3,8 +3,9 @@ import passportJwt from 'passport-jwt'
 // import GithubStrategy from 'passport-github2'
 // import { createHash, isValidPassword } from '../utils/hashBcrypt.js'
 import UserManagerMongo from '../daos/MongoDB/userManager.js'
-import { private_key } from '../utils/jsonWebToken.js'
+import { configObject } from '../config/connectDB.js'
 
+const jwt_secret_Key = configObject.jwt_secret_Key
 const userManager = new UserManagerMongo()
 const JWTStrategy = passportJwt.Strategy
 const ExtractJWT = passportJwt.ExtractJwt
@@ -92,12 +93,12 @@ const initializePassport = () => {
 
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey: private_key
+        secretOrKey: jwt_secret_Key
     }, async (jwt_payload, done) => {
         try {
             return done(null, jwt_payload)
         } catch (error) {
-            return done(error, false, {message})
+            return done(error, false, { message })
         }
     }))
 }
